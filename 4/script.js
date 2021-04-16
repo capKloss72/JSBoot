@@ -1,20 +1,46 @@
-// console.log(a);
-// console.log(b());
+//var icons = document.getElementsByClassName('fa');
 
-// var a = 10;
-
-// var b = function b() {
-//   return 20;
+// for (var i = 0; i < icons.length; i++) {
+//   console.log(icons[i]);
 // }
 
-// console.log(a);
+// var iconsarray = Array.from(icons);
+// iconsarray.push('hello');
 
-if (true) {
-  var a = 10;
-} else {
-  var b = 20;
-}
+// console.log(iconsarray);
 
-console.log(a);
-console.log(b);
+// Array.from(icons).forEach(function(icon) {
+//   console.log(icon);
+// })
+
+// var lis = document.getElementsByTagName('li');
+// console.log(lis);
+
+// var lis = document.querySelectorAll('li, h2, #hide-list');
+// console.log(lis);
+
+// Array.from(lis).forEach(function(li) {
+//   li.textContent = 'Hello world';
+// });
+
+var h2 = document.querySelector('header h2');
+
+h2.className = 'changeBg';
+h2.className = 'changeFt';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
