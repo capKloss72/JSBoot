@@ -22,8 +22,10 @@ function generateNoteListItem(noteName) {
   newInput.setAttribute('class', 'edit-node');
   newInput.setAttribute('type', 'text');
 
-  console.log(newLi);
+	list.appendChild(newLi);
 
+	console.log(newLi);
+	
 //   var newEl = document.createElement('button');
 // console.log(newEl);
 
@@ -53,7 +55,6 @@ function getUserInput() {
   var input = document.getElementById('add-input');
   
   btn.addEventListener('click', function() {
-    //if (input.textContent)
     console.log(input.nodeValue);
   })
 }
@@ -61,15 +62,13 @@ function getUserInput() {
 var btn = document.getElementById('add-btn');
 var input = document.getElementById('add-input');
   
-btn.addEventListener('click', function() {
-  //if (input.textContent)
-  
-  console.log('tuym');
-  generateNoteListItem('Tymek');
+btn.addEventListener('click', function(e) {
+	e.preventDefault();
+  console.log('Nothing ' + input.value);
+  generateNoteListItem(input.value);
 })
 
-//generateNoteListItem('First Note');
-//getUserInput();
+//generateNoteListItem('input.value');
 
 
 
