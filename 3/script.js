@@ -28,8 +28,13 @@ var per = {
   lastName: 'Smith',
   getFullName: function() {
     console.log(this === per);
-    return this.firstName + ' ' + this.lastName;
-  }
+    console.log(this.firstName + ' ' + this.lastName);
+
+    function greet() {
+      console.log(this.firstName);
+    }
+    greet();
+  }  
 }
 
-console.log(per.getFullName());
+per.getFullName();
