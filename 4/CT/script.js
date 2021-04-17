@@ -23,8 +23,6 @@ function generateNoteListItem(noteName) {
   newInput.setAttribute('type', 'text');
 
 	list.appendChild(newLi);
-
-	//console.log(newLi);
 }
 
 
@@ -33,8 +31,8 @@ var input = document.getElementById('add-input');
   
 btn.addEventListener('click', function(e) {
 	e.preventDefault();
-	var newNote = input.value;
-	if (newNote != null && newNote != '') {
+	var newNote = input.value.trim();
+  if (newNote != null && newNote.length > 0) {
 		generateNoteListItem(input.value);
 	}
 })
