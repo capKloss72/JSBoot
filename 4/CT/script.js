@@ -1,5 +1,6 @@
 var list = document.querySelector('ul');
 const hideNotes = document.getElementById('hide-list');
+const hideItem = document.getElementById('hide');
 var chidren = null;
 
 // Create list item
@@ -59,22 +60,36 @@ list.addEventListener('click', function(e) {
   } 
 })
 
-hideNotes.addEventListener('click', function(e) {
-  var hideText =  e.target.innerHTML;
-  if (hideText === 'Hide notes') {
-    console.log(hideText);
-    e.target.innerHTML = 'Unhide notes';
-    saveChildren();
-    while (list.firstChild) {
-      list.removeChild(list.firstChild);
-    }  
-  } else if (hideText === 'Unhide notes') {
-    console.log('in unhide notes');
-    console.log(chidren);
-    while (list.firstChild) {
-      list.appendChild(children.firstChild);
-    }
-  }   
+// hideNotes.addEventListener('click', function(e) {
+//   var hideText =  e.target.innerHTML;
+//   if (hideText === 'Hide notes') {
+//     console.log(hideText);
+//     e.target.innerHTML = 'Unhide notes';
+//     saveChildren();
+//     while (list.firstChild) {
+//       list.removeChild(list.firstChild);
+//     }  
+//   } else if (hideText === 'Unhide notes') {
+//     console.log('in unhide notes');
+//     console.log(chidren);
+//     list = chidren.cloneNode(true);
+//     for (var i = 0; i < chidren.childNodes.length; i++) {
+//       list.appendChild(chidren.childNodes[i]);
+//     }
+//   }   
+// })
+
+// Hide Items
+
+hideItem.addEventListener('click', function(e){
+  const label = document.querySelector('label');
+  if (hideItem.checked) {
+    list.style.display = 'none';
+    label.textContent = 'Unhide notes';
+  } else {
+    list.style.display = 'block';
+    label.textContent = 'Hide notes';
+  }
 })
 
 function saveChildren() {
