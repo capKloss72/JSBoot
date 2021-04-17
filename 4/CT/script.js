@@ -32,10 +32,29 @@ list.addEventListener('click', function(e) {
   if (e.target.classList[1] === 'fa-pencil-square-o') {
     var parentPara = e.target.parentNode;
     parentPara.style.display = 'none';
+
     var input = parentPara.nextElementSibling;
-    var note = parentPara.previousElementSibling;    
-    console.log(e.target.classList[1] + ' ' + note + ' ' + input);
-  }
+    var note = parentPara.previousElementSibling;  
+    
+    input.style.display = 'block';
+
+    input.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        var newNoteName = input.value.trim();
+        if (newNoteName !== null && newNoteName.length > 0) {
+          note.textContent = newNoteName;
+          parentPara.style.display = 'block';
+          input.style.display = 'none';
+        } else {
+          var parentPara = e.target.parentNode;
+          list.removeChild(parentPara);
+        }
+      }
+    })
+  } else if (e.target.classList[1] === 'fa-times') {
+    var parentPara = e.target.parentNode.parentNode;
+    list.removeChild(parentPara);
+  } 
 })
 
 function cleanupAddNoteInput() {
@@ -54,6 +73,7 @@ btn.addEventListener('click', function(e) {
 		generateNoteListItem(input.value);
 	}
 })
+
 
 
 
