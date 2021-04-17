@@ -1,8 +1,8 @@
+var list = document.querySelector('ul');
 
 // Create list item
 function generateNoteListItem(noteName) {
 
-  var list = document.getElementById('list');
   var newLi = document.createElement('li');
   var newP = document.createElement('p');
   var newPI = document.createElement('p');
@@ -26,6 +26,17 @@ function generateNoteListItem(noteName) {
 
   cleanupAddNoteInput();
 }
+
+// Edit and delte items
+list.addEventListener('click', function(e) {
+  if (e.target.classList[1] === 'fa-pencil-square-o') {
+    var parentPara = e.target.parentNode;
+    parentPara.style.display = 'none';
+    var input = parentPara.nextElementSibling;
+    var note = parentPara.previousElementSibling;    
+    console.log(e.target.classList[1] + ' ' + note + ' ' + input);
+  }
+})
 
 function cleanupAddNoteInput() {
   if (input.value != null && (input.value).trim().length > 0) {
