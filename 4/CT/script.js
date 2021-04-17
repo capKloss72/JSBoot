@@ -60,27 +60,7 @@ list.addEventListener('click', function(e) {
   } 
 })
 
-// hideNotes.addEventListener('click', function(e) {
-//   var hideText =  e.target.innerHTML;
-//   if (hideText === 'Hide notes') {
-//     console.log(hideText);
-//     e.target.innerHTML = 'Unhide notes';
-//     saveChildren();
-//     while (list.firstChild) {
-//       list.removeChild(list.firstChild);
-//     }  
-//   } else if (hideText === 'Unhide notes') {
-//     console.log('in unhide notes');
-//     console.log(chidren);
-//     list = chidren.cloneNode(true);
-//     for (var i = 0; i < chidren.childNodes.length; i++) {
-//       list.appendChild(chidren.childNodes[i]);
-//     }
-//   }   
-// })
-
 // Hide Items
-
 hideItem.addEventListener('click', function(e){
   const label = document.querySelector('label');
   if (hideItem.checked) {
@@ -92,9 +72,21 @@ hideItem.addEventListener('click', function(e){
   }
 })
 
-function saveChildren() {
-  chidren = list.cloneNode(true);
-}
+// Search filter
+const searchInput = document.querySelector('#search-note input');
+searchInput.addEventListener('keyup', function(e) {
+  var searchChar = e.target.value.toUpperCase();
+  var nodes = list.getElementsByTagName('li');
+
+  Array.from(nodes).forEach(function(note) {
+    var parText = note.firstElementChild.textContent;
+    if(parText.toUpperCase().indexOf(searchChar) != -1) {
+      note.style.display = 'block';
+    } else {
+      note.style.display = 'none';
+    }
+  })
+})
 
 function cleanupAddNoteInput() {
   if (input.value != null && (input.value).trim().length > 0) {
