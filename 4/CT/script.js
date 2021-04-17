@@ -23,8 +23,15 @@ function generateNoteListItem(noteName) {
   newInput.setAttribute('type', 'text');
 
 	list.appendChild(newLi);
+
+  cleanupAddNoteInput();
 }
 
+function cleanupAddNoteInput() {
+  if (input.value != null && (input.value).trim().length > 0) {
+    input.value = '';
+  }
+}
 
 var btn = document.getElementById('add-btn');
 var input = document.getElementById('add-input');
