@@ -1,4 +1,6 @@
 var list = document.querySelector('ul');
+const hideNotes = document.getElementById('hide-list');
+var chidren = null;
 
 // Create list item
 function generateNoteListItem(noteName) {
@@ -56,6 +58,28 @@ list.addEventListener('click', function(e) {
     list.removeChild(parentPara);
   } 
 })
+
+hideNotes.addEventListener('click', function(e) {
+  var hideText =  e.target.innerHTML;
+  if (hideText === 'Hide notes') {
+    console.log(hideText);
+    e.target.innerHTML = 'Unhide notes';
+    saveChildren();
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }  
+  } else if (hideText === 'Unhide notes') {
+    console.log('in unhide notes');
+    console.log(chidren);
+    while (list.firstChild) {
+      list.appendChild(children.firstChild);
+    }
+  }   
+})
+
+function saveChildren() {
+  chidren = list.cloneNode(true);
+}
 
 function cleanupAddNoteInput() {
   if (input.value != null && (input.value).trim().length > 0) {
