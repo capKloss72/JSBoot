@@ -76,9 +76,9 @@ hideItem.addEventListener('click', function(e){
 const searchInput = document.querySelector('#search-note input');
 searchInput.addEventListener('keyup', function(e) {
   var searchChar = e.target.value.toUpperCase();
-  var nodes = list.getElementsByTagName('li');
+  var notes = list.getElementsByTagName('li');
 
-  Array.from(nodes).forEach(function(note) {
+  Array.from(notes).forEach(function(note) {
     var parText = note.firstElementChild.textContent;
     if(parText.toUpperCase().indexOf(searchChar) != -1) {
       note.style.display = 'block';
