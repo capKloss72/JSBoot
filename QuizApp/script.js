@@ -24,9 +24,19 @@ var quizContraller = (function() {
     }
   }
 
+  function isChecked(options) {
+    options.forEach(option => {
+      if (option.previousElementSibling.checked) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
   return {
     addQuestionOnLocalStorage: function (newQuestionText, options) {
-      var optionsArray, correctAnswer, questionId, newQuestion, getStoredQuestions;
+      var optionsArray, correctAnswer, questionId, newQuestion, getStoredQuestions, isChecked = false;
 
       if (questionLocalStorage.getQuestionCollection() === null) {
         questionLocalStorage.setQuestionCollection([]);
@@ -39,6 +49,7 @@ var quizContraller = (function() {
         }
         if (option.previousElementSibling.checked && option.value !== "") {
           correctAnswer = option.value;
+          isChecked = true;
         }
       });
 
@@ -49,10 +60,33 @@ var quizContraller = (function() {
       } else {
         questionId = 0;
       }
-      var newQuestion = new Question(questionId, newQuestionText, optionsArray, correctAnswer);
-      getStoredQuestions = questionLocalStorage.getQuestionCollection();
-      getStoredQuestions.push(newQuestion);
-      questionLocalStorage.setQuestionCollection(getStoredQuestions);
+
+      if (newQuestionText !== null && newQuestionText.value.length > 0) {
+        if (optionsArray.length >= 2) {
+          if (isChecked) {
+            var newQuestion = new Question(questionId, newQuestionText.value, optionsArray, correctAnswer);
+            getStoredQuestions = questionLocalStorage.getQuestionCollection();
+            getStoredQuestions.push(newQuestion);
+            questionLocalStorage.setQuestionCollection(getStoredQuestions);
+
+            newQuestionText.value = "";
+            options.forEach(option => {
+              if (option.value !== null && option.value !== "") {
+                option.value = "";
+              }
+              if (option.previousElementSibling.checked) {
+                option.previousElementSibling.checked = false;
+              }
+            });
+          } else {
+            alert('You must select the correct answer');
+          }
+        } else {
+          alert('You must add at least two answers');
+        }
+      } else {
+        alert("Please enter a valid question");
+      }
       console.log('qCollection.getQuestionCollection() :>> ', questionLocalStorage.getQuestionCollection());
     }
   }
@@ -78,6 +112,6 @@ var UIController = (function() {
 var Controller = (function(quizCtrl, uiCtrl) {
   var selectedDomItems = uiCtrl.getDomItems;
   selectedDomItems.questionInsertBtn.addEventListener('click', function(e) {
-    quizCtrl.addQuestionOnLocalStorage(selectedDomItems.newQuestionText.value, selectedDomItems.adminOption);
+    quizCtrl.addQuestionOnLocalStorage(selectedDomItems.newQuestionText, selectedDomItems.adminOption);
   })  
 })(quizContraller, UIController);
