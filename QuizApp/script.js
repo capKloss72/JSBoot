@@ -143,6 +143,8 @@ var UIController = (function() {
 
         //Add new question
         questionHTML = '<p><span>' + numberingArray[i] + ' ' + getQuestions.getQuestionCollection()[i].questionText  + '</span><button id="question-' + getQuestions.getQuestionCollection()[i].id  + '">Edit</button></p>';
+        
+        // Insert new question to question list
         domItems.insertedQuestionsWrapper.insertAdjacentHTML('afterbegin', questionHTML);
       }
     }
