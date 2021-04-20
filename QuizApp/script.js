@@ -1,3 +1,4 @@
+// @ts-check
 //****QUIZ CONTROLLER****/
 var quizContraller = (function() {
   
@@ -165,11 +166,11 @@ var Controller = (function(quizCtrl, uiCtrl) {
       uiCtrl.createQuestionList(quizContraller.getQuestionLocalStorage);
     }
 
-  })
+  });
   
   selectedDomItems.insertedQuestionsWrapper.addEventListener('click', function(e) {
-    console.log(e.target.innerHTML);
+    console.log(e.target);
 
-  })
+  });
 
 })(quizContraller, UIController);
