@@ -86,7 +86,6 @@ var quizContraller = (function() {
       } else {
         alert("Please enter a valid question");
       }
-      console.log('qCollection.getQuestionCollection() :>> ', questionLocalStorage.getQuestionCollection());
     }
   }
 })();
@@ -107,9 +106,15 @@ var UIController = (function() {
     addInoutsDynamically: function() {
 
       addInput = function () {
-        console.log('added input dynamically');
-      }
+        var inputHTML, z;
 
+        z = document.querySelectorAll('.admin-option').length;
+
+        inputHTML = '<div class="admin-option-wrapper"><input type="radio" class="admin-option-' + z + '" name="answer" value="1"><input type="text" class="admin-option admin-option-' + z + '" value=""></div>';
+        domItems.adminOptionsContainer.insertAdjacentHTML('beforeend', inputHTML);
+        domItems.adminOptionsContainer.lastElementChild.previousElementSibling.lastElementChild.removeEventListener('focus', addInput);
+        domItems.adminOptionsContainer.lastElementChild.lastElementChild.addEventListener('focus', addInput);
+      }
       domItems.adminOptionsContainer.lastElementChild.lastElementChild.addEventListener('focus', addInput);
     }
   };
@@ -123,6 +128,7 @@ var Controller = (function(quizCtrl, uiCtrl) {
   uiCtrl.addInoutsDynamically();
 
   selectedDomItems.questionInsertBtn.addEventListener('click', function(e) {
-    quizCtrl.addQuestionOnLocalStorage(selectedDomItems.newQuestionText, selectedDomItems.adminOption);
+    var adminOptions = document.querySelectorAll('.admin-option');
+    quizCtrl.addQuestionOnLocalStorage(selectedDomItems.newQuestionText, adminOptions);
   })  
 })(quizContraller, UIController);
