@@ -35,6 +35,9 @@ var quizContraller = (function() {
   }
 
   return {
+
+    getQuestionLocalStorage: questionLocalStorage,
+
     addQuestionOnLocalStorage: function (newQuestionText, options) {
       var optionsArray, correctAnswer, questionId, newQuestion, getStoredQuestions, isChecked = false;
 
@@ -77,14 +80,18 @@ var quizContraller = (function() {
                 option.previousElementSibling.checked = false;
               }
             });
+            return true;
           } else {
             alert('You must select the correct answer');
+            return false;
           }
         } else {
           alert('You must add at least two answers');
+          return false;
         }
       } else {
         alert("Please enter a valid question");
+        return false;
       }
     }
   }
@@ -98,7 +105,8 @@ var UIController = (function() {
     questionInsertBtn: document.getElementById('question-insert-btn'),
     newQuestionText: document.getElementById('new-question-text'),
     adminOption: document.querySelectorAll('.admin-option'),
-    adminOptionsContainer: document.querySelector('.admin-options-container')
+    adminOptionsContainer: document.querySelector('.admin-options-container'),
+    insertedQuestionsWrapper: document.querySelector('.inserted-questions-wrapper')
   }
   
   return {
@@ -116,6 +124,25 @@ var UIController = (function() {
         domItems.adminOptionsContainer.lastElementChild.lastElementChild.addEventListener('focus', addInput);
       }
       domItems.adminOptionsContainer.lastElementChild.lastElementChild.addEventListener('focus', addInput);
+    },
+    createQuestionList: function(getQuestions) {
+      var questionHTML, numberingArray = [];
+      domItems.insertedQuestionsWrapper.innerHTML = '';
+
+      //Check if local storege is empty
+      if (getQuestions.getQuestionCollection() === null) {
+        getQuestions.setQuestionCollection([]);
+      }
+
+      //Add new quuestion to question list
+      for(var i = 0; i < getQuestions.getQuestionCollection().length; i++) {
+        //Update question mumber
+        numberingArray.push(i+1);
+
+        //Add new question
+        questionHTML = '<p><span>' + numberingArray[i] + ' ' + getQuestions.getQuestionCollection()[i].questionText  + '</span><button id="question-' + getQuestions.getQuestionCollection()[i].id  + '">Edit</button></p>';
+        domItems.insertedQuestionsWrapper.insertAdjacentHTML('afterbegin', questionHTML);
+      }
     }
   };
 
@@ -126,9 +153,17 @@ var Controller = (function(quizCtrl, uiCtrl) {
   var selectedDomItems = uiCtrl.getDomItems;
 
   uiCtrl.addInoutsDynamically();
+  uiCtrl.createQuestionList(quizContraller.getQuestionLocalStorage);
 
   selectedDomItems.questionInsertBtn.addEventListener('click', function(e) {
     var adminOptions = document.querySelectorAll('.admin-option');
-    quizCtrl.addQuestionOnLocalStorage(selectedDomItems.newQuestionText, adminOptions);
+    
+    var checkIfInserted = quizCtrl.addQuestionOnLocalStorage(selectedDomItems.newQuestionText, adminOptions);
+
+    if (checkIfInserted) {
+      //Update the question list following a succesful insert into question list
+      uiCtrl.createQuestionList(quizContraller.getQuestionLocalStorage);
+    }
+
   })  
 })(quizContraller, UIController);
