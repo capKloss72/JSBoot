@@ -114,7 +114,7 @@ var UIController = (function() {
     getDomItems: domItems,
     addInoutsDynamically: function() {
 
-      addInput = function () {
+      var addInput = function () {
         var inputHTML, z;
 
         z = document.querySelectorAll('.admin-option').length;
