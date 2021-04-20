@@ -1,8 +1,8 @@
 // @ts-check
-//****QUIZ CONTROLLER****/
-var quizContraller = (function() {
+//****QUIZ CONTROLLER ****/
+var quizController = (function() {
   
-  // Question Constructor
+  // Question Constructor used to store questions in local storage
   class Question {
     constructor(id, questionText, options, correctAnswer) {
       this.id = id;
@@ -12,36 +12,37 @@ var quizContraller = (function() {
     }
   }
 
+  /*
+    Function used to write, read and remove questions from local storage
+  */
   var questionLocalStorage = {
     setQuestionCollection: function(newCollection) {
       localStorage.setItem('questionCollection', JSON.stringify(newCollection))     
     },
     getQuestionCollection: function() {
-      var quuestionCollection = JSON.parse(localStorage.getItem('questionCollection'))
-      return quuestionCollection;
+      var questionCollection = JSON.parse(localStorage.getItem('questionCollection'))
+      return questionCollection;
     },
     removeQuestionCollection: function() {
       localStorage.removeItem('questionCollection')
     }
   }
 
-  function isChecked(options) {
-    options.forEach(option => {
-      if (option.previousElementSibling.checked) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
-
+  // Returns functions and variables form QUIZ CONTROLLER
   return {
 
+    // Makes questionLocalStorage publicly accessible 
     getQuestionLocalStorage: questionLocalStorage,
 
+    /*
+      Adds questions to local storage.
+      Parameters: newQuestionText - new-question-text element from domItems
+                  options - text next to the radio button used to indicate correct answer
+    */
     addQuestionOnLocalStorage: function (newQuestionText, options) {
       var optionsArray, correctAnswer, questionId, newQuestion, getStoredQuestions, isChecked = false;
 
+      // Check is local storage is empty and instantiates an empty [] if null
       if (questionLocalStorage.getQuestionCollection() === null) {
         questionLocalStorage.setQuestionCollection([]);
       }
@@ -112,7 +113,7 @@ var UIController = (function() {
   
   return {
     getDomItems: domItems,
-    addInoutsDynamically: function() {
+    addInputsDynamically: function() {
 
       var addInput = function () {
         var inputHTML, z;
@@ -130,14 +131,14 @@ var UIController = (function() {
       var questionHTML, numberingArray = [];
       domItems.insertedQuestionsWrapper.innerHTML = '';
 
-      //Check if local storege is empty
+      //Check if local storage is empty
       if (getQuestions.getQuestionCollection() === null) {
         getQuestions.setQuestionCollection([]);
       }
 
-      //Add new quuestion to question list
+      //Add new question to question list
       for(var i = 0; i < getQuestions.getQuestionCollection().length; i++) {
-        //Update question mumber
+        //Update question number
         numberingArray.push(i+1);
 
         //Add new question
@@ -153,8 +154,8 @@ var UIController = (function() {
 var Controller = (function(quizCtrl, uiCtrl) {
   var selectedDomItems = uiCtrl.getDomItems;
 
-  uiCtrl.addInoutsDynamically();
-  uiCtrl.createQuestionList(quizContraller.getQuestionLocalStorage);
+  uiCtrl.addInputsDynamically();
+  uiCtrl.createQuestionList(quizController.getQuestionLocalStorage);
 
   selectedDomItems.questionInsertBtn.addEventListener('click', function(e) {
     var adminOptions = document.querySelectorAll('.admin-option');
@@ -162,8 +163,8 @@ var Controller = (function(quizCtrl, uiCtrl) {
     var checkIfInserted = quizCtrl.addQuestionOnLocalStorage(selectedDomItems.newQuestionText, adminOptions);
 
     if (checkIfInserted) {
-      //Update the question list following a succesful insert into question list
-      uiCtrl.createQuestionList(quizContraller.getQuestionLocalStorage);
+      //Update the question list following a successful insert into question list
+      uiCtrl.createQuestionList(quizController.getQuestionLocalStorage);
     }
 
   });
@@ -173,4 +174,4 @@ var Controller = (function(quizCtrl, uiCtrl) {
 
   });
 
-})(quizContraller, UIController);
+})(quizController, UIController);
