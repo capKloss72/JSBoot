@@ -165,5 +165,11 @@ var Controller = (function(quizCtrl, uiCtrl) {
       uiCtrl.createQuestionList(quizContraller.getQuestionLocalStorage);
     }
 
-  })  
+  })
+  
+  selectedDomItems.insertedQuestionsWrapper.addEventListener('click', function(e) {
+    console.log(e.target.innerHTML);
+
+  })
+
 })(quizContraller, UIController);
