@@ -47,6 +47,7 @@ var quizController = (function() {
         questionLocalStorage.setQuestionCollection([]);
       }
 
+      //Check if the options are not empty and that the correct answer is selected
       optionsArray = [];
       options.forEach(option => {
         if (option.value !== null && option.value !== "") {
@@ -59,7 +60,7 @@ var quizController = (function() {
       });
 
       const qCollection = questionLocalStorage.getQuestionCollection();
-      // [] 
+      // [] Increment question ID or add the first ID if none exists
       if(questionLocalStorage.getQuestionCollection().length > 0) {
         questionId = questionLocalStorage.getQuestionCollection()[questionLocalStorage.getQuestionCollection().length - 1].id + 1;
       } else {
@@ -113,6 +114,8 @@ var UIController = (function() {
   
   return {
     getDomItems: domItems,
+
+    // Adds a new answer option dynamically once the focus of the last element is selected 
     addInputsDynamically: function() {
 
       var addInput = function () {
@@ -127,6 +130,8 @@ var UIController = (function() {
       }
       domItems.adminOptionsContainer.lastElementChild.lastElementChild.addEventListener('focus', addInput);
     },
+
+    // Update the list of questions in the lower panel
     createQuestionList: function(getQuestions) {
       var questionHTML, numberingArray = [];
       domItems.insertedQuestionsWrapper.innerHTML = '';
