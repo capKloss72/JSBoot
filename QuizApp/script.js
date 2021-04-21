@@ -1,8 +1,18 @@
 // @ts-check
-//****QUIZ CONTROLLER ****/
-var quizController = (function() {
+/**
+ * QUIZ CONTROLLER
+ */
+var QuizController = (function() {
   
   // Question Constructor used to store questions in local storage
+  /**
+   * class containing questions and list of answer options with a correct answer indicated 
+   * @constructor
+   * @param {number} id`
+   * @param {HTMLDocument} questionText
+   * @param {NodeList} options
+   * @param {NodeList} correctAnswer
+   */
   class Question {
     constructor(id, questionText, options, correctAnswer) {
       this.id = id;
@@ -11,9 +21,9 @@ var quizController = (function() {
       this.correctAnswer = correctAnswer;
     }
   }
-
-  /*
-    Function used to write, read and remove questions from local storage
+  
+ /**
+  * Function used to write, read and remove questions from local storage
   */
   var questionLocalStorage = {
     setQuestionCollection: function(newCollection) {
@@ -28,16 +38,20 @@ var quizController = (function() {
     }
   }
 
-  // Returns functions and variables form QUIZ CONTROLLER
+  
+  /**
+   * @return {questionLocalStorage, addQuestionOnLocalStorage}
+   */
   return {
 
     // Makes questionLocalStorage publicly accessible 
     getQuestionLocalStorage: questionLocalStorage,
 
-    /*
-      Adds questions to local storage.
-      Parameters: newQuestionText - new-question-text element from domItems
-                  options - text next to the radio button used to indicate correct answer
+   /**
+    * Adds questions to local storage.
+    * @param {HTMLElement} newQuestionText 
+    * @param {NodeList} options 
+    * @returns {boolean} true if element has been added correctly 
     */
     addQuestionOnLocalStorage: function (newQuestionText, options) {
       var optionsArray, correctAnswer, questionId, newQuestion, getStoredQuestions, isChecked = false;
@@ -103,6 +117,14 @@ var quizController = (function() {
 //****UI CONTROLLER****/
 var UIController = (function() {
 
+  /**
+   * Return DOM elements used by the app
+   * @param {HTMLElement} questionInsertBtn button to insert new question / answer
+   * @param {HTMLElement} newQuestionText new question text box and associated element
+   * @param {NodeList} adminOption questions and selected correct answer
+   * @param {Element} adminOptionsContainer contains DIV of the administrative options --> DIV containing answers and correct answer selection
+   * @param {Element} insertedQuestionsWrapper inserted / saved sawers including edit button 
+   */
   var domItems = {
     // Admin Panel Elements
     questionInsertBtn: document.getElementById('question-insert-btn'),
@@ -131,7 +153,10 @@ var UIController = (function() {
       domItems.adminOptionsContainer.lastElementChild.lastElementChild.addEventListener('focus', addInput);
     },
 
-    // Update the list of questions in the lower panel
+    /**
+     * Update the list of questions in the lower panel
+     * @param {any} getQuestions 
+     */
     createQuestionList: function(getQuestions) {
       var questionHTML, numberingArray = [];
       domItems.insertedQuestionsWrapper.innerHTML = '';
@@ -158,11 +183,16 @@ var UIController = (function() {
 })();
 
 //****CONTROLLER****/
+/**
+ * Controller
+ * @param {QuizController} QuizController
+ * @param {UIController} UIController
+ */
 var Controller = (function(quizCtrl, uiCtrl) {
   var selectedDomItems = uiCtrl.getDomItems;
 
   uiCtrl.addInputsDynamically();
-  uiCtrl.createQuestionList(quizController.getQuestionLocalStorage);
+  uiCtrl.createQuestionList(QuizController.getQuestionLocalStorage);
 
   selectedDomItems.questionInsertBtn.addEventListener('click', function(e) {
     var adminOptions = document.querySelectorAll('.admin-option');
@@ -171,7 +201,7 @@ var Controller = (function(quizCtrl, uiCtrl) {
 
     if (checkIfInserted) {
       //Update the question list following a successful insert into question list
-      uiCtrl.createQuestionList(quizController.getQuestionLocalStorage);
+      uiCtrl.createQuestionList(QuizController.getQuestionLocalStorage);
     }
 
   });
@@ -181,4 +211,4 @@ var Controller = (function(quizCtrl, uiCtrl) {
 
   });
 
-})(quizController, UIController);
+})(QuizController, UIController);
