@@ -64,15 +64,20 @@ var QuizController = (function() {
       //Check if the options are not empty and that the correct answer is selected
       optionsArray = [];
       options.forEach(option => {
+        // @ts-ignore
         if (option.value !== null && option.value !== "") {
+          // @ts-ignore
           optionsArray.push(option.value);
         }
+        // @ts-ignore
         if (option.previousElementSibling.checked && option.value !== "") {
+          // @ts-ignore
           correctAnswer = option.value;
           isChecked = true;
         }
       });
 
+      // @ts-ignore
       const qCollection = questionLocalStorage.getQuestionCollection();
       // [] Increment question ID or add the first ID if none exists
       if(questionLocalStorage.getQuestionCollection().length > 0) {
@@ -81,19 +86,26 @@ var QuizController = (function() {
         questionId = 0;
       }
 
+      // @ts-ignore
       if (newQuestionText !== null && newQuestionText.value.length > 0) {
         if (optionsArray.length >= 2) {
           if (isChecked) {
+            // @ts-ignore
             var newQuestion = new Question(questionId, newQuestionText.value, optionsArray, correctAnswer);
             getStoredQuestions = questionLocalStorage.getQuestionCollection();
             getStoredQuestions.push(newQuestion);
             questionLocalStorage.setQuestionCollection(getStoredQuestions);
+            // @ts-ignore
             newQuestionText.value = "";
             options.forEach(option => {
+              // @ts-ignore
               if (option.value !== null && option.value !== "") {
+                // @ts-ignore
                 option.value = "";
               }
+              // @ts-ignore
               if (option.previousElementSibling.checked) {
+                // @ts-ignore
                 option.previousElementSibling.checked = false;
               }
             });
@@ -131,7 +143,9 @@ var UIController = (function() {
     newQuestionText: document.getElementById('new-question-text'),
     adminOption: document.querySelectorAll('.admin-option'),
     adminOptionsContainer: document.querySelector('.admin-options-container'),
-    insertedQuestionsWrapper: document.querySelector('.inserted-questions-wrapper')
+    insertedQuestionsWrapper: document.querySelector('.inserted-questions-wrapper'),
+    questionUpdateBtn: document.getElementById('question-update-btn'),
+    questionDeleteBtn: document.getElementById('question-delete-btn')
   }
   
   return {
@@ -171,11 +185,45 @@ var UIController = (function() {
         //Update question number
         numberingArray.push(i+1);
 
-        //Add new question
+        //Add new question and change button id to be ID+1
         questionHTML = '<p><span>' + numberingArray[i] + ' ' + getQuestions.getQuestionCollection()[i].questionText  + '</span><button id="question-' + getQuestions.getQuestionCollection()[i].id  + '">Edit</button></p>';
         
         // Insert new question to question list
         domItems.insertedQuestionsWrapper.insertAdjacentHTML('afterbegin', questionHTML);
+      }
+    },
+
+    /**
+     * Function to edit created questions
+     * @param {Event} event 
+     * @param {*} storageQuestionList 
+     */
+    editQuestionList: function(event, storageQuestionList, addInputsDyna) {
+      var getID, getStorageQuestionList, foundItem, placeInArray, optionHTML = '';
+      if('question-'.indexOf(event.target.id)) {
+        getID = parseInt(event.target.id.split('-')[1]);
+        getStorageQuestionList = storageQuestionList.getQuestionCollection();
+        
+        for (var i = 0; i < getStorageQuestionList.length; i++) {
+          if (getStorageQuestionList[i].id === getID) {
+            foundItem = getStorageQuestionList[i];
+            placeInArray = i;
+          }
+        }
+
+        domItems.newQuestionText.value = foundItem.questionText;
+        domItems.adminOptionsContainer.innerHTML = '';
+
+        for (var x = 0; x < foundItem.options.length; x++) {
+          optionHTML += '<div class="admin-option-wrapper"><input type="radio" class="admin-option-"' + x + 'name="answer" value="' + x + '"><input type="text" class="admin-option admin-option-'+ x + '" value="' + foundItem.options[x] + '"></div>'
+        }
+
+        domItems.adminOptionsContainer.innerHTML = optionHTML;
+        domItems.questionDeleteBtn.style.visibility = 'visible';
+        domItems.questionUpdateBtn.style.visibility = 'visible';
+        domItems.questionInsertBtn.style.visibility = 'hidden';
+        addInputsDyna();
+        console.log(optionHTML);
       }
     }
   };
@@ -194,6 +242,7 @@ var Controller = (function(quizCtrl, uiCtrl) {
   uiCtrl.addInputsDynamically();
   uiCtrl.createQuestionList(QuizController.getQuestionLocalStorage);
 
+  // @ts-ignore
   selectedDomItems.questionInsertBtn.addEventListener('click', function(e) {
     var adminOptions = document.querySelectorAll('.admin-option');
     
@@ -207,7 +256,7 @@ var Controller = (function(quizCtrl, uiCtrl) {
   });
   
   selectedDomItems.insertedQuestionsWrapper.addEventListener('click', function(e) {
-    console.log(e.target);
+    uiCtrl.editQuestionList(e, quizCtrl.getQuestionLocalStorage, uiCtrl.addInputsDynamically);
 
   });
 
