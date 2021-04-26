@@ -26,7 +26,7 @@ var quizController = (function() {
             return JSON.parse(localStorage.getItem('questionCollection'));
         }, 
         // 37
-        removeQuestionCollectino: function() {
+        removeQuestionCollection: function() {
             localStorage.removeItem('questionColection');
         }
     }

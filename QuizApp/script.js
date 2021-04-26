@@ -145,7 +145,8 @@ var UIController = (function() {
     adminOptionsContainer: document.querySelector('.admin-options-container'),
     insertedQuestionsWrapper: document.querySelector('.inserted-questions-wrapper'),
     questionUpdateBtn: document.getElementById('question-update-btn'),
-    questionDeleteBtn: document.getElementById('question-delete-btn')
+    questionDeleteBtn: document.getElementById('question-delete-btn'),
+    questionClearBtn: document.getElementById('questions-clear-btn')
   }
   
   return {
@@ -222,7 +223,45 @@ var UIController = (function() {
         domItems.questionDeleteBtn.style.visibility = 'visible';
         domItems.questionUpdateBtn.style.visibility = 'visible';
         domItems.questionInsertBtn.style.visibility = 'hidden';
+        domItems.questionClearBtn.style.pointerEvents = 'none';
         addInputsDyna();
+
+        var updateQuestion = function() {
+          var newOptions = [], optionElements;
+          foundItem.questionText = domItems.newQuestionText.value;
+          foundItem.correctAnswer = '';
+          optionElements = document.querySelectorAll('.admin-option');
+
+          for (var i = 0; i < optionElements.length; i++) {
+            if (optionElements[i].value !== '') {
+              newOptions.push(optionElements[i].value);
+              
+            }
+            if (optionElements[i].previousElementSibling.checked) {
+              foundItem.correctAnswer = optionElements[i].value;
+            }
+          }
+          foundItem.options = newOptions;
+
+          if (foundItem.questionText !== ''){
+            if (foundItem.options.length > 1) {
+              if (foundItem.correctAnswer !== '') {
+                getStorageQuestionList.splice(placeInArray, 1, foundItem);
+                storageQuestionList.setQuestionCollection(getStorageQuestionList);
+              } else {
+                alert('You must select the correct answer');
+                return false;
+              }
+            } else {
+              alert('Please provide at least two options');
+            }
+          } else {
+            alert('Please, Insert question')
+          }
+        }
+
+        domItems.questionUpdateBtn.onclick = updateQuestion;
+        domItems.newQuestionText.value = foundItem.questionText;
         console.log(optionHTML);
       }
     }
@@ -254,6 +293,12 @@ var Controller = (function(quizCtrl, uiCtrl) {
     }
 
   });
+
+  // selectedDomItems.questionUpdateBtn.addEventListener('click', function (e) {
+  //   var adminOptions = selectedDomItems.adminOption;
+  //   console.log('Here is us ' + selectedDomItems.newQuestionText.value);
+  //   console.log(adminOptions);
+  // });
   
   selectedDomItems.insertedQuestionsWrapper.addEventListener('click', function(e) {
     uiCtrl.editQuestionList(e, quizCtrl.getQuestionLocalStorage, uiCtrl.addInputsDynamically);
