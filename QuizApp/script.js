@@ -199,7 +199,7 @@ var UIController = (function() {
      * @param {Event} event 
      * @param {*} storageQuestionList 
      */
-    editQuestionList: function(event, storageQuestionList, addInputsDyna) {
+    editQuestionList: function(event, storageQuestionList, addInputsDyna, updateQuestionListFunction) {
       var getID, getStorageQuestionList, foundItem, placeInArray, optionHTML = '';
       if('question-'.indexOf(event.target.id)) {
         getID = parseInt(event.target.id.split('-')[1]);
@@ -248,6 +248,16 @@ var UIController = (function() {
               if (foundItem.correctAnswer !== '') {
                 getStorageQuestionList.splice(placeInArray, 1, foundItem);
                 storageQuestionList.setQuestionCollection(getStorageQuestionList);
+                domItems.newQuestionText.value = '';
+                for (var i = 0; i < optionElements.length; i++) {
+                  optionElements[i].value = '';
+                  optionElements[i].previousElementSibling.checked = false;
+                }
+                domItems.questionDeleteBtn.style.visibility = 'hidden';
+                domItems.questionUpdateBtn.style.visibility = 'hidden';
+                domItems.questionInsertBtn.style.visibility = 'visible';
+                domItems.questionClearBtn.style.pointerEvents = '';
+                updateQuestionListFunction(storageQuestionList);
               } else {
                 alert('You must select the correct answer');
                 return false;
@@ -301,7 +311,7 @@ var Controller = (function(quizCtrl, uiCtrl) {
   // });
   
   selectedDomItems.insertedQuestionsWrapper.addEventListener('click', function(e) {
-    uiCtrl.editQuestionList(e, quizCtrl.getQuestionLocalStorage, uiCtrl.addInputsDynamically);
+    uiCtrl.editQuestionList(e, quizCtrl.getQuestionLocalStorage, uiCtrl.addInputsDynamically, uiCtrl.createQuestionList);
 
   });
 
