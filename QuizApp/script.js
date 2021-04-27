@@ -355,7 +355,7 @@ var UIController = (function() {
         domItems.quizOptionsWrapper.innerHTML = '';
         var newOptions = [];
         for (var i = 0; i < storageQuestionList.getQuestionCollection()[progress.questionIndex].options.length; i++) {
-          newOptionHTML = '<div class="choice-' + i + '"><span class="choice-0">' + charArray[i] + '</span><p  class="choice-' + i + '">' + storageQuestionList.getQuestionCollection()[progress.questionIndex].options[i]  + '</p></div>'
+          newOptionHTML = '<div class="choice-' + i + '"><span class="choice-' + i + '">' + charArray[i] + '</span><p  class="choice-' + i + '">' + storageQuestionList.getQuestionCollection()[progress.questionIndex].options[i]  + '</p></div>'
           domItems.quizOptionsWrapper.insertAdjacentHTML('beforeend', newOptionHTML);
         }
       }
@@ -366,6 +366,10 @@ var UIController = (function() {
       domItems.progressWrapper.firstElementChild.innerHTML = progress.questionIndex + 1 + '/' + numberOfQuestions;
       domItems.progressWrapper.lastElementChild.setAttribute('value', '' + (progress.questionIndex + 1 / numberOfQuestions) * 100);
       domItems.progressWrapper.lastElementChild.setAttribute('max', '100');
+    },
+
+    checkForCorrectAnswer: function(event, storageQuestionList) {
+      console.log(event.target);
     }
   };
 
@@ -414,5 +418,25 @@ var Controller = (function(quizCtrl, uiCtrl) {
 
   // @ts-ignore
   uiCtrl.displayProgress(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
+
+  selectedDomItems.quizOptionsWrapper.addEventListener('click', function(e) {
+    var updatedOptionDiv = selectedDomItems.quizOptionsWrapper.querySelectorAll('div');
+    var correctAnswer = quizCtrl.getQuestionLocalStorage.getQuestionCollection()[quizCtrl.getQuizProgress.questionIndex].correctAnswer;
+    //console.log(correctAnswer.correctAnswer);
+    for (var i = 0; i < updatedOptionDiv.length; i++) {
+      if (e.target.className === 'choice-' + i) {
+        var answer = document.querySelector('.quiz-options-wrapper div p.' + e.target.className);
+        if (answer.innerHTML === correctAnswer) {
+          console.log('Answer ' + answer.innerHTML + ' is correct');
+        } else {
+          console.log('Answer ' + answer.innerHTML + ' is NOT correct');
+        }
+      }
+    }
+
+
+
+    //uiCtrl.checkForCorrectAnswer(e, quizCtrl.getQuestionLocalStorage);
+  })
 
 })(QuizController, UIController);
