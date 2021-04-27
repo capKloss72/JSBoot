@@ -38,11 +38,22 @@ var QuizController = (function() {
     }
   }
 
+  if (questionLocalStorage.getQuestionCollection() === null) {
+    questionLocalStorage.setQuestionCollection([]);
+  }
+
+  var quizProgress = {
+    questionIndex: 0
+  }
+
   
   /**
    * @return {questionLocalStorage, addQuestionOnLocalStorage}
    */
   return {
+
+    //Returns quizProgress object
+    getQuizProgress: quizProgress,
 
     // Makes questionLocalStorage publicly accessible 
     getQuestionLocalStorage: questionLocalStorage,
@@ -147,7 +158,10 @@ var UIController = (function() {
     insertedQuestionsWrapper: document.querySelector('.inserted-questions-wrapper'),
     questionUpdateBtn: document.getElementById('question-update-btn'),
     questionDeleteBtn: document.getElementById('question-delete-btn'),
-    questionClearBtn: document.getElementById('questions-clear-btn')
+    questionClearBtn: document.getElementById('questions-clear-btn'),
+    //Elements for QUIZ Section of html
+    askedQuestionText: document.getElementById('asked-question-text'),
+    quizOptionsWrapper: document.querySelector('.quiz-options-wrapper')
   }
   
   return {
@@ -328,7 +342,23 @@ var UIController = (function() {
               }
           }
       }
-  }
+    },
+
+    displayQuestion: function(storageQuestionList, progress) {
+      var newOptionHTML, charArray;
+
+      charArray = ['A','B','C','D','E','F'];
+
+      if (storageQuestionList.getQuestionCollection().length > 0) {
+        domItems.askedQuestionText.textContent = storageQuestionList.getQuestionCollection()[progress.questionIndex].questionText;
+        domItems.quizOptionsWrapper.innerHTML = '';
+        var newOptions = [];
+        for (var i = 0; i < storageQuestionList.getQuestionCollection()[progress.questionIndex].options.length; i++) {
+          newOptionHTML = '<div class="choice-' + i + '"><span class="choice-0">' + charArray[i] + '</span><p  class="choice-' + i + '">' + storageQuestionList.getQuestionCollection()[progress.questionIndex].options[i]  + '</p></div>'
+          domItems.quizOptionsWrapper.insertAdjacentHTML('beforeend', newOptionHTML);
+        }
+      }
+    }
   };
 
 })();
@@ -369,6 +399,9 @@ var Controller = (function(quizCtrl, uiCtrl) {
   selectedDomItems.questionClearBtn.addEventListener('click', function() {
     // 191
     uiCtrl.clearQuestList(quizCtrl.getQuestionLocalStorage);
-});
+  });
+
+  // @ts-ignore
+  uiCtrl.displayQuestion(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
 
 })(QuizController, UIController);
