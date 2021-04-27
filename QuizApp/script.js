@@ -134,6 +134,11 @@ var QuizController = (function() {
         alert("Please enter a valid question");
         return false;
       }
+    },
+
+    checkForCorrectAnswer: function(answer) {
+      var correctAnswer = questionLocalStorage.getQuestionCollection()[quizProgress.questionIndex].correctAnswer;
+      return answer.innerHTML === correctAnswer;
     }
   }
 })();
@@ -162,7 +167,11 @@ var UIController = (function() {
     //Elements for QUIZ Section of html
     askedQuestionText: document.getElementById('asked-question-text'),
     quizOptionsWrapper: document.querySelector('.quiz-options-wrapper'),
-    progressWrapper: document.querySelector('.progressBar')
+    progressWrapper: document.querySelector('.progressBar'),
+    instantAnswerContainer: document.querySelector('.instant-answer-container'),
+    instantAnswerWrapper: document.getElementById('instant-answer-wrapper'),
+    instantAnswerText: document.getElementById('instant-answer-text'),
+    instantAnswerBtn: document.getElementById('next-question-btn')
   }
   
   return {
@@ -336,7 +345,7 @@ var UIController = (function() {
               // console.log(conf);
               // 196
               if(conf) {
-                  // 197
+                  // 197c
                   storageQuestList.removeQuestionCollection();
                   // 198
                   domItems.insertedQuestionsWrapper.innerHTML = '';
@@ -367,9 +376,30 @@ var UIController = (function() {
       domItems.progressWrapper.lastElementChild.setAttribute('value', '' + (progress.questionIndex + 1 / numberOfQuestions) * 100);
       domItems.progressWrapper.lastElementChild.setAttribute('max', '100');
     },
+    
+    newDesign: function(isCorrect, answer) {
+      var index = 0;
+      var emotion = document.getElementById('emotion');
+      var twoOptions = {
+        instantAnswerText: ['This is the wrong answer', 'This is a correct answer'],
+        emotions: ['./images/sad.png', './images/happy.png'],
+        color: ['red', 'green'],
+        nextBtnStyle: ["opacity: 0.6; pointer-events: none;", "opacity: 1; pointer-events: '';"]
+      }
 
-    checkForCorrectAnswer: function(event, storageQuestionList) {
-      console.log(event.target);
+      domItems.quizOptionsWrapper.style.cssText = "opacity: 0.6; pointer-events: none;";
+      domItems.instantAnswerContainer.style.opacity = '1';
+
+      if (isCorrect) {
+        index = 1;
+      }
+
+      domItems.instantAnswerText.innerHTML = twoOptions.instantAnswerText[index];
+      emotion.setAttribute('src', twoOptions.emotions[index]);
+      domItems.instantAnswerWrapper.style.backgroundColor = twoOptions.color[index];
+      domItems.instantAnswerBtn.style.cssText = twoOptions.nextBtnStyle[index];
+
+      console.log(isCorrect, answer);
     }
   };
 
@@ -421,22 +451,19 @@ var Controller = (function(quizCtrl, uiCtrl) {
 
   selectedDomItems.quizOptionsWrapper.addEventListener('click', function(e) {
     var updatedOptionDiv = selectedDomItems.quizOptionsWrapper.querySelectorAll('div');
-    var correctAnswer = quizCtrl.getQuestionLocalStorage.getQuestionCollection()[quizCtrl.getQuizProgress.questionIndex].correctAnswer;
-    //console.log(correctAnswer.correctAnswer);
     for (var i = 0; i < updatedOptionDiv.length; i++) {
       if (e.target.className === 'choice-' + i) {
         var answer = document.querySelector('.quiz-options-wrapper div p.' + e.target.className);
-        if (answer.innerHTML === correctAnswer) {
-          console.log('Answer ' + answer.innerHTML + ' is correct');
-        } else {
-          console.log('Answer ' + answer.innerHTML + ' is NOT correct');
-        }
+        uiCtrl.newDesign(quizCtrl.checkForCorrectAnswer(answer), answer);
       }
     }
+  });
 
-
-
-    //uiCtrl.checkForCorrectAnswer(e, quizCtrl.getQuestionLocalStorage);
-  })
+  selectedDomItems.instantAnswerBtn.addEventListener('click', function() {
+    quizCtrl.getQuizProgress.questionIndex =+1;
+    selectedDomItems.quizOptionsWrapper.style.cssText = "opacity: 1; pointer-events: '';";
+    uiCtrl.displayQuestion(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
+    uiCtrl.displayProgress(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
+  });
 
 })(QuizController, UIController);
