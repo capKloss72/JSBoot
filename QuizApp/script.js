@@ -161,7 +161,8 @@ var UIController = (function() {
     questionClearBtn: document.getElementById('questions-clear-btn'),
     //Elements for QUIZ Section of html
     askedQuestionText: document.getElementById('asked-question-text'),
-    quizOptionsWrapper: document.querySelector('.quiz-options-wrapper')
+    quizOptionsWrapper: document.querySelector('.quiz-options-wrapper'),
+    progressWrapper: document.querySelector('.progressBar')
   }
   
   return {
@@ -358,6 +359,13 @@ var UIController = (function() {
           domItems.quizOptionsWrapper.insertAdjacentHTML('beforeend', newOptionHTML);
         }
       }
+    },
+
+    displayProgress: function(storageQuestionList, progress) {
+      var numberOfQuestions = storageQuestionList.getQuestionCollection().length;
+      domItems.progressWrapper.firstElementChild.innerHTML = progress.questionIndex + 1 + '/' + numberOfQuestions;
+      domItems.progressWrapper.lastElementChild.setAttribute('value', '' + (progress.questionIndex + 1 / numberOfQuestions) * 100);
+      domItems.progressWrapper.lastElementChild.setAttribute('max', '100');
     }
   };
 
@@ -403,5 +411,8 @@ var Controller = (function(quizCtrl, uiCtrl) {
 
   // @ts-ignore
   uiCtrl.displayQuestion(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
+
+  // @ts-ignore
+  uiCtrl.displayProgress(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
 
 })(QuizController, UIController);
