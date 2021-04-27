@@ -459,7 +459,7 @@ var Controller = (function(quizCtrl, uiCtrl) {
   });
 
   selectedDomItems.instantAnswerBtn.addEventListener('click', function() {
-    quizCtrl.getQuizProgress.questionIndex =+ 1;
+    quizCtrl.getQuizProgress.questionIndex += 1;
     selectedDomItems.quizOptionsWrapper.style.cssText = "opacity: 1; pointer-events: '';";
     uiCtrl.displayQuestion(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
     uiCtrl.displayProgress(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
