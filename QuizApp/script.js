@@ -378,7 +378,7 @@ var UIController = (function() {
       domItems.progressWrapper.lastElementChild.setAttribute('max', '100');
     },
     
-    newDesign: function(isCorrect, answer, hasMoreQuestions) {
+    newDesign: function(isCorrect, answer) {
       var index = 0;
       var emotion = document.getElementById('emotion');
       var twoOptions = {
@@ -453,10 +453,7 @@ var Controller = (function(quizCtrl, uiCtrl) {
     for (var i = 0; i < updatedOptionDiv.length; i++) {
       if (e.target.className === 'choice-' + i) {
         var answer = document.querySelector('.quiz-options-wrapper div p.' + e.target.className);
-        var hasMoreQuestions = quizCtrl.getQuizProgress.questionIndex + 1 < quizCtrl.getQuestionLocalStorage.getQuestionCollection().length;
-        console.log(quizCtrl.getQuizProgress.questionIndex + 1, quizCtrl.getQuestionLocalStorage.getQuestionCollection().length);
-        console.log('hasMoreQuestions :>> ', hasMoreQuestions);
-        uiCtrl.newDesign(quizCtrl.checkForCorrectAnswer(answer), answer, hasMoreQuestions);
+        uiCtrl.newDesign(quizCtrl.checkForCorrectAnswer(answer), answer);
       }
     }
   });
@@ -466,6 +463,7 @@ var Controller = (function(quizCtrl, uiCtrl) {
     selectedDomItems.quizOptionsWrapper.style.cssText = "opacity: 1; pointer-events: '';";
     uiCtrl.displayQuestion(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
     uiCtrl.displayProgress(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
+    selectedDomItems.instantAnswerContainer.style.opacity = '0';
     if (quizCtrl.getQuizProgress.questionIndex + 1 < quizCtrl.getQuestionLocalStorage.getQuestionCollection().length) {
       selectedDomItems.instantAnswerBtn.style.opacity = '1';
       selectedDomItems.instantAnswerBtn.style.pointerEvents = '';
